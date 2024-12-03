@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CLASSIFIED ACCESS</title>
+    <style>
+        body {
+            background-color: #000;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            padding: 20px;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .terminal {
+            border: 2px solid #00ff00;
+            padding: 20px;
+            width: 80%;
+            max-width: 600px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+
+        .blink {
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+
+        input {
+            background-color: #000;
+            border: none;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            outline: none;
+            width: 200px;
+        }
+
+        #stars {
+            display: inline-block;
+            min-width: 100px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        pre {
+            margin: 0;
+        }
+
+        .terminal-line {
+            margin: 5px 0;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="terminal">
+        <div class="header">
+            <pre>
+  ____ ___  _   _ _____ ___ ____  _____ _   _ _____ ___    _    _     
+ / ___/ _ \| \ | |  ___|_ _|  _ \| ____| \ | |_   _|_ _|  / \  | |    
+| |  | | | |  \| | |_   | || | | |  _| |  \| | | |  | |  / _ \ | |    
+| |__| |_| | |\  |  _|  | || |_| | |___| |\  | | |  | | / ___ \| |___ 
+ \____\___/|_| \_|_|   |___|____/|_____|_| \_| |_| |___/_/   \_\_____|
+            </pre>
+        </div>
+        
+        <p class="terminal-line">TERMINAL ACCESS POINT: DELTA-7</p>
+        <p class="terminal-line">SECURITY CLEARANCE REQUIRED</p>
+        <p class="terminal-line">ENTER ACCESS CODE: <span id="stars"></span><span class="blink">_</span></p>
+        <input type="password" id="passwordInput" autofocus>
+    </div>
+
+    <script>
+        const input = document.getElementById('passwordInput');
+        const stars = document.getElementById('stars');
+        const correctPassword = "TOPSECRET";
+        let displayedPassword = "";
+
+        input.addEventListener('input', (e) => {
+            displayedPassword = "*".repeat(e.target.value.length);
+            stars.textContent = displayedPassword;
+        });
+
+        function typeWriter(text, element) {
+            let i = 0;
+            return new Promise(resolve => {
+                const typing = setInterval(() => {
+                    if (i < text.length) {
+                        element.textContent += text.charAt(i);
+                        i++;
+                    } else {
+                        clearInterval(typing);
+                        resolve();
+                    }
+                }, 50);
+            });
+        }
+
+        input.addEventListener('keypress', async (e) => {
+            if (e.key === 'Enter') {
+                if (input.value.toUpperCase() === correctPassword) {
+                    const terminal = document.querySelector('.terminal');
+                    const messages = [
+                        "INITIALIZING SYSTEM ACCESS...",
+                        "CHECKING SECURITY CLEARANCE...",
+                        "VERIFYING CREDENTIALS...",
+                        "SCANNING DATABASE...",
+                        "BYPASSING FIREWALL...",
+                        "ESTABLISHING SECURE CONNECTION...",
+                        "DECRYPTING FILES...",
+                        "ACCESS GRANTED. WELCOME AGENT."
+                    ];
+
+                    // Clear existing content
+                    terminal.innerHTML = '';
+
+                    // Add messages one by one with typewriter effect
+                    for (let message of messages) {
+                        const p = document.createElement('p');
+                        p.className = 'terminal-line';
+                        p.style.color = '#00ff00';
+                        terminal.appendChild(p);
+                        await typeWriter(`> ${message}`, p);
+                        await new Promise(resolve => setTimeout(resolve, 200));
+                    }
+
+                    setTimeout(() => {
+                        window.location.href = "/secure-web/code.html";
+                    }, 1000);
+                } else {
+                    const p = document.createElement('p');
+                    p.className = 'terminal-line';
+                    p.style.color = '#ff0000';
+                    document.querySelector('.terminal').appendChild(p);
+                    await typeWriter("> ACCESS DENIED. SECURITY ALERT TRIGGERED.", p);
+                    setTimeout(() => {
+                        location.reload();
+                    }, 2000);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
+
+
+
+
